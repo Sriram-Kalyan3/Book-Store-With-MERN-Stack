@@ -4,6 +4,23 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const getFromLocalStorage = () => {
+  let localDb = JSON.parse(localStorage.getItem("books"));
+  if (!localDb) {
+    localStorage.setItem("books", JSON.stringify([]));
+    return [];
+  }
+  return localDb;
+};
+
+const setToLocalStorage = (item) => {
+  let localDb = getFromLocalStorage();
+  localDb.push(item);
+  localStorage.setItem("books", JSON.stringify(localDb));
+  console.log("Saved in local storage");
+  return { data: "Saved success" };
+};
+
 const AddBook = () => {
   const history = useNavigate();
   const [inputs, setInputs] = useState({
@@ -36,10 +53,23 @@ const AddBook = () => {
       .then((res) => res.data);
   };
 
+  const localSendRequest = async () => {
+    let dataItem = {
+      _id: Number(Date.now()),
+      name: String(inputs.name),
+      author: String(inputs.author),
+      description: String(inputs.description),
+      price: Number(inputs.price),
+      image: String(inputs.image),
+      available: Boolean(checked),
+    };
+    setToLocalStorage(dataItem);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(inputs, checked);
-    sendRequest().then(() => history("/books"));
+    localSendRequest().then(() => history("/books"));
   };
 
   return (

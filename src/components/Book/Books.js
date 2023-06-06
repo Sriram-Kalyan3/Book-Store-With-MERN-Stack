@@ -12,6 +12,12 @@ const localFetchHandler = async () => {
     { _id: 1, name: "Wings of fire", description: "A good book", price: 1000, author: "A.P.J.Abdul Kalam", image: "images/1.jpg" },
     { _id: 2, name: "Ignited minds", description: "A great book", price: 3000, author: "A.P.J.Abdul Kalam", image: "images/2.jpg" },
   ];
+  let localStorageItems = JSON.parse(localStorage.getItem("books"));
+  if (localStorageItems) {
+    localStorageItems.forEach((element) => {
+      json_db.push(element);
+    });
+  }
 
   return json_db;
 };
